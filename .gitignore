@@ -1,0 +1,35 @@
+# Node modules and dependencies
+node_modules/
+
+# Python virtual environments
+venv/
+__pycache__/
+
+# Environment variables
+.env
+
+# Docker-related files
+*.log
+*.pid
+*.bak
+docker-compose.override.yml
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Prometheus and Grafana data
+observability/prometheus.yml
+grafana.db
+
+# Local volumes
+volumes/
+pgdata/
+
+# Other
+*.tmp
