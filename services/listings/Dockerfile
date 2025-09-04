@@ -1,14 +1,21 @@
-FROM node:20-alpine
+# Use Node.js 18
+FROM node:18
 
+# Set working directory
 WORKDIR /app
 
-COPY package*.json ./
+# Copy package files and install dependencies
+COPY package.json tsconfig.json ./
 RUN npm install
 
-COPY . .
+# Copy the rest of the source code
+COPY ./src ./src
 
+# Build TypeScript
 RUN npm run build
 
-EXPOSE 4000
+# Expose port
+EXPOSE 3002
 
+# Start service
 CMD ["npm", "start"]

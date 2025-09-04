@@ -1,35 +1,19 @@
-import fastify from 'fastify';
-import dotenv from 'dotenv';
-import listingsRouter from './routes/listings';
-import fastifyJwt from '@fastify/jwt';
+import express from "express";
+import listingsRouter from "./routes/listings";
 
-dotenv.config();
+const app = express();
+app.use(express.json());
 
-const server = fastify({ logger: true });
+// Routes
+app.use("/listings", listingsRouter);
 
-server.register(fastifyJwt, {
-  secret: process.env.JWT_SECRET || 'devsecret',
+// Health check
+app.get("/health", (req, res) => {
+  res.json({ status: "listings service is running" });
 });
 
-
-server.decorate("authenticate", async function (request, reply) {
-  try {
-    await request.jwtVerify();
-  } catch (err) {
-    reply.send(err);
-  }
+// Start server
+const PORT = process.env.PORT || 3002;
+app.listen(PORT, () => {
+  console.log(`Listings service listening on port ${PORT}`);
 });
-
-server.register(listingsRouter, { prefix: '/listings' });
-
-const start = async () => {
-  try {
-    await server.listen({ port: Number(process.env.PORT || 4001), host: '0.0.0.0' });
-    server.log.info(`listings service listening on ${process.env.PORT || 4001}`);
-  } catch (err) {
-    server.log.error(err);
-    process.exit(1);
-  }
-};
-
-start();

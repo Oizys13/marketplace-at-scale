@@ -1,52 +1,53 @@
 import { Router } from "express";
-import { pool } from "../index";
 
 const router = Router();
 
-// Get all listings
-router.get("/", async (_req, res) => {
-  try {
-    const result = await pool.query("SELECT * FROM listings ORDER BY created_at DESC");
-    res.json(result.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to fetch listings" });
-  }
+// In-memory mock database
+let listings = [
+  { id: 1, title: "Beautiful Apartment", price: 1200 },
+  { id: 2, title: "Cozy Studio", price: 800 }
+];
+
+// GET all listings
+router.get("/", (req, res) => {
+  res.json(listings);
 });
 
-// Create a new listing
-router.post("/", async (req, res) => {
-  const { title, description, price, seller_id } = req.body;
-
-  if (!title || !price || !seller_id) {
-    return res.status(400).json({ error: "title, price, and seller_id are required" });
+// GET single listing by ID
+router.get("/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const listing = listings.find(l => l.id === id);
+  if (!listing) {
+    return res.status(404).json({ message: "Listing not found" });
   }
-
-  try {
-    const result = await pool.query(
-      "INSERT INTO listings (title, description, price, seller_id, created_at) VALUES ($1, $2, $3, $4, NOW()) RETURNING *",
-      [title, description || "", price, seller_id]
-    );
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to create listing" });
-  }
+  res.json(listing);
 });
 
-// Get a single listing by ID
-router.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const result = await pool.query("SELECT * FROM listings WHERE id = $1", [id]);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Listing not found" });
-    }
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to fetch listing" });
+// POST create new listing
+router.post("/", (req, res) => {
+  const { title, price } = req.body;
+  const newListing = { id: listings.length + 1, title, price };
+  listings.push(newListing);
+  res.status(201).json(newListing);
+});
+
+// PUT update listing
+router.put("/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const { title, price } = req.body;
+  const listingIndex = listings.findIndex(l => l.id === id);
+  if (listingIndex === -1) {
+    return res.status(404).json({ message: "Listing not found" });
   }
+  listings[listingIndex] = { id, title, price };
+  res.json(listings[listingIndex]);
+});
+
+// DELETE listing
+router.delete("/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  listings = listings.filter(l => l.id !== id);
+  res.status(204).send();
 });
 
 export default router;
