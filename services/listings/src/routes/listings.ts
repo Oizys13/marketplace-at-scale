@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { publishEvent } from "../events/publisher";
 
 const router = Router();
 
@@ -24,12 +25,20 @@ router.get("/:id", (req, res) => {
 });
 
 // POST create new listing
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const { title, price } = req.body;
   const newListing = { id: listings.length + 1, title, price };
   listings.push(newListing);
+
+  // Publish event
+  await publishEvent("notifications", {
+    type: "ListingCreated",
+    data: newListing
+  });
+
   res.status(201).json(newListing);
 });
+
 
 // PUT update listing
 router.put("/:id", (req, res) => {

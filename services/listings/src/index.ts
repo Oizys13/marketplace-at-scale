@@ -1,5 +1,7 @@
 import express from "express";
 import listingsRouter from "./routes/listings";
+import { connectRabbitMQ } from "./events/publisher";
+
 
 const app = express();
 app.use(express.json());
@@ -14,6 +16,7 @@ app.get("/health", (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 3002;
-app.listen(PORT, () => {
-  console.log(`Listings service listening on port ${PORT}`);
+app.listen(PORT, async () => {
+  await connectRabbitMQ();
+  console.log(`Listings service running on port ${PORT}`);
 });
