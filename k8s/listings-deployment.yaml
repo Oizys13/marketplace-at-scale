@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: listings-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: listings
+  template:
+    metadata:
+      labels:
+        app: listings
+    spec:
+      containers:
+        - name: listings
+          image: listings-service:latest   
+          imagePullPolicy: IfNotPresent    
+          ports:
+            - containerPort: 3002
+          env:
+            - name: DATABASE_URL
+              value: "postgres://postgres:postgres@postgres:5432/postgres"
+            - name: RABBITMQ_URL
+              value: "amqp://rabbitmq:5672"

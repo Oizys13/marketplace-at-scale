@@ -1,7 +1,7 @@
 import amqp from "amqplib";
 
 async function startWorker() {
-  const connection = await amqp.connect("amqp://localhost");
+  const connection = await amqp.connect(process.env.RABBITMQ_URL || "amqp://localhost:5672");
   const channel = await connection.createChannel();
   await channel.assertQueue("notifications", { durable: true });
 
@@ -20,6 +20,7 @@ async function startWorker() {
       channel.ack(msg);
     }
   });
+  process.stdin.resume();
 }
 
 startWorker().catch(err => {
