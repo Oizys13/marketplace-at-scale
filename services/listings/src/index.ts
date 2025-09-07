@@ -20,3 +20,5 @@ app.listen(PORT, async () => {
   await connectRabbitMQ();
   console.log(`Listings service running on port ${PORT}`);
 });
+
+export default app;

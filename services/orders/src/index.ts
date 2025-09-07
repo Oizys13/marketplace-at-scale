@@ -28,3 +28,5 @@ app.use("/orders", ordersRouter);
 app.listen(port, () => {
   console.log(`Orders service running on port ${port}`);
 });
+
+export default app;
