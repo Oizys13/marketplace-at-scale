@@ -4,12 +4,12 @@ $ErrorActionPreference = "Stop"
 Write-Host "Checking if cluster already exists..."
 $clusters = kind get clusters
 
-if ($clusters -notmatch "marketplace") {
-    Write-Host "Creating kind cluster 'marketplace'..."
-    kind create cluster --name marketplace
+if ($clusters -match "marketplace") {
+    Write-Host "Cluster 'marketplace' already exists."
 }
 else {
-    Write-Host "Cluster 'marketplace' already exists."
+    Write-Host "Creating kind cluster 'marketplace'..."
+    kind create cluster --name marketplace
 }
 
 Write-Host "Building Docker images..."

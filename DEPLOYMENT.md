@@ -1,23 +1,10 @@
-# Marketplace at Scale 🛒
-
-A cloud-native microservices-based marketplace application deployed on Kubernetes with PostgreSQL and RabbitMQ.  
-
-## Features
-
-- Listings Service (manages marketplace items)
-- Worker Service (background processing, async tasks)
-- PostgreSQL (relational database)
-- RabbitMQ (message broker)
-- Kubernetes for orchestration
-- GitHub Actions CI/CD
-
-## Deployment Guide
+# Deployment Guide
 
 This document explains how to deploy the Marketplace-at-Scale project using Docker, Kubernetes, and Kind.
 
 ---
 
-### Prerequisites
+## Prerequisites
 
 - Docker installed and running
 - Kind (Kubernetes in Docker) installed
