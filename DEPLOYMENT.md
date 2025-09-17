@@ -82,8 +82,9 @@ Follow these steps to test that the `listings-service` can accept requests and t
 
    In one terminal, run:
 
-   ```powershell
+   ```bash
    kubectl port-forward svc/listings-service 3002:3002
+   ```
 
    This makes the listings-service accessible at http://localhost:3002.
 
@@ -91,11 +92,12 @@ Follow these steps to test that the `listings-service` can accept requests and t
 
     In another terminal (PowerShell):
 
-    ```powershell
+    ```bash
     Invoke-RestMethod -Uri "http://localhost:3002/listings" `
     -Method POST `
     -Headers @{ "Content-Type" = "application/json" } `
     -Body '{"title":"Test","price":100}'
+    ```
     
     This should create a test listing and send a message to RabbitMQ.
 
@@ -103,11 +105,11 @@ Follow these steps to test that the `listings-service` can accept requests and t
 
     To see what the worker is processing, run:
 
-    ```powershell
+    ```bash
     kubectl logs -f deploy/worker-deployment
+    ```
 
     This will stream logs from the worker. You should see it consume the ListingCreated event and acknowledge the message.
-
 
 ## Step 7: CI/CD with GitHub Actions
 
