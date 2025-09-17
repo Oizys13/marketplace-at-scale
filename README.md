@@ -128,6 +128,7 @@ Follow these steps to test that the `listings-service` can accept requests and t
 ## Step 7: CI/CD with GitHub Actions
 
 1-Create the workflow file at .github/workflows/ci.yml.
+
 2-Install act.
 
 3-From the project root, run:
